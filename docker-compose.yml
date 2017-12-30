@@ -1,6 +1,7 @@
 nginx:
   image: nginx:stable-alpine
   container_name: nginx
+  restart: unless-stopped
   volumes:
     - ./nginx/conf.d:/etc/nginx/conf.d
     - ./nginx/vhost.d:/etc/nginx/vhost.d
@@ -13,6 +14,7 @@ nginx:
 nginx-gen:
   image: jwilder/docker-gen
   container_name: nginx-gen
+  restart: unless-stopped
   command: "-notify-sighup nginx -watch -only-exposed -wait 5s:30s /etc/docker-gen/templates/nginx.tmpl /etc/nginx/conf.d/default.conf"
   volumes_from: [nginx]
   volumes:
@@ -21,6 +23,7 @@ nginx-gen:
 nginx-letsencrypt:
   image: jrcs/letsencrypt-nginx-proxy-companion
   container_name: nginx-letsencrypt
+  restart: unless-stopped
   links: [nginx-gen]
   volumes_from: [nginx]
   volumes:
